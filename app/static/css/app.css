@@ -1,0 +1,84 @@
+:root {
+  --studio-ink: #172033;
+  --studio-muted: #657084;
+  --studio-accent: #2f6fed;
+  --studio-surface: #ffffff;
+  --studio-background: #f4f7fb;
+}
+
+body {
+  background: var(--studio-background);
+  color: var(--studio-ink);
+}
+
+.navbar-brand {
+  letter-spacing: 0.01em;
+}
+
+.card {
+  background: var(--studio-surface);
+}
+
+.eyebrow {
+  color: var(--studio-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.catalog-hero {
+  max-width: 760px;
+}
+
+.problem-card {
+  border-top: 4px solid var(--studio-accent) !important;
+}
+
+.guidance-card {
+  background: #eaf2ff;
+  border: 1px solid #cfe0ff;
+  border-radius: 8px;
+}
+
+.score-panel {
+  border-left: 4px solid var(--studio-accent) !important;
+}
+
+.feedback-finding {
+  border-left: 3px solid #9bb8ed;
+  padding-left: 1rem;
+}
+
+.severity-important {
+  background: #842029;
+  color: #fff;
+}
+
+.severity-warning {
+  background: #997404;
+  color: #fff;
+}
+
+.severity-info {
+  background: #055160;
+  color: #fff;
+}
+
+.submission-block {
+  border-top: 1px solid #e3e8f0;
+  padding-top: 1rem;
+}
+
+.submission-text {
+  background: #f8faff;
+  border: 1px solid #e3e8f0;
+  border-radius: 6px;
+  color: var(--studio-ink);
+  font: inherit;
+  max-height: 18rem;
+  overflow: auto;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}

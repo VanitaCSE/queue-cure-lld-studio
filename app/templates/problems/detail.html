@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Problem Details | Queue-Cure LLD Studio{% endblock %}
+
+{% block content %}
+  <a class="link-secondary small" href="{{ url_for('problems.index') }}">&larr; Back to problems</a>
+  <header class="mt-4 mb-5">
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+      <p class="eyebrow mb-0">Low-Level Design Problem</p>
+      <span class="badge text-bg-primary">{{ problem.difficulty }}</span>
+    </div>
+    <h1 class="display-6 fw-bold">{{ problem.title }}</h1>
+    <p class="lead text-secondary">{{ problem.summary }}</p>
+    <p class="text-secondary">{{ problem.description }}</p>
+  </header>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-7">
+      <section class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <h2 class="h4">Functional requirements</h2>
+          <ol class="mb-0">
+            {% for requirement in problem.requirements %}
+              <li class="mb-2">{{ requirement }}</li>
+            {% endfor %}
+          </ol>
+        </div>
+      </section>
+
+      <section class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h4">Constraints</h2>
+          <ol class="mb-0">
+            {% for constraint in problem.constraints %}
+              <li class="mb-2">{{ constraint }}</li>
+            {% endfor %}
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <div class="col-12 col-lg-5">
+      <section class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-4">
+          <h2 class="h4">Evaluation rubric</h2>
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Category</th>
+                  <th scope="col" class="text-end">Maximum score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for category, score in problem.rubric.items() %}
+                  <tr>
+                    <td>{{ category }}</td>
+                    <td class="text-end">{{ score }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <section class="guidance-card p-4 p-md-5 mt-4">
+    <h2 class="h4">What to submit</h2>
+    <p class="text-secondary">Describe your design in five focused parts:</p>
+    <ol class="mb-4">
+      <li>Classes and responsibilities</li>
+      <li>Relationships and main workflow</li>
+      <li>Interfaces and extensibility choices</li>
+      <li>Assumptions and trade-offs</li>
+      <li>Optional Mermaid class diagram</li>
+    </ol>
+    <form method="post" action="{{ url_for('problems.create_attempt', slug=problem.slug) }}">
+      <button class="btn btn-primary" type="submit">Start Design Attempt</button>
+    </form>
+  </section>
+{% endblock %}

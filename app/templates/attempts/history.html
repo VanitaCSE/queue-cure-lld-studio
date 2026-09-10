@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}My History | Queue-Cure LLD Studio{% endblock %}
+
+{% block content %}
+  <p class="eyebrow">Demo Learner</p>
+  <h1 class="h2">My Design Attempts</h1>
+
+  {% if not attempts %}
+    <div class="card border-0 shadow-sm mt-4">
+      <div class="card-body p-4">
+        <p class="mb-3 text-secondary">You have not started an attempt yet.</p>
+        <a class="btn btn-primary" href="{{ url_for('problems.index') }}">Browse Problems</a>
+      </div>
+    </div>
+  {% else %}
+    <div class="card border-0 shadow-sm mt-4">
+      <div class="table-responsive">
+        <table class="table align-middle mb-0">
+          <thead>
+            <tr>
+              <th scope="col">Attempt ID</th>
+              <th scope="col">Problem</th>
+              <th scope="col">Status</th>
+              <th scope="col">Created</th>
+              <th scope="col">Updated</th>
+              <th scope="col">Score</th>
+              <th scope="col"><span class="visually-hidden">Action</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for attempt in attempts %}
+              {% set problem = problems_by_id.get(attempt.problem_id) %}
+              <tr>
+                <td>#{{ attempt.id }}</td>
+                <td>{{ problem.title if problem else "Unknown problem" }}</td>
+                <td><span class="badge text-bg-warning">{{ attempt.status.value.replace('_', ' ').title() }}</span></td>
+                <td>{{ attempt.created_at }}</td>
+                <td>{{ attempt.updated_at }}</td>
+                <td>{{ evaluations.get(attempt.id).overall_score or "—" if evaluations.get(attempt.id) else "—" }}</td>
+                <td class="text-end">
+                  {% if attempt.status.value == "DRAFT" %}
+                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('attempts.edit', attempt_id=attempt.id) }}">Continue Draft</a>
+                  {% else %}
+                    <a class="btn btn-sm btn-outline-primary" href="{{ url_for('attempts.feedback', attempt_id=attempt.id) }}">View Feedback</a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Your Design Attempt | Queue-Cure LLD Studio{% endblock %}
+
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div>
+      <a class="link-secondary small" href="{{ url_for('problems.detail', slug=problem.slug) }}">&larr; Back to Problem</a>
+      <p class="eyebrow mt-4 mb-2">Design Workspace</p>
+      <h1 class="h2 mb-2">Your Design Attempt</h1>
+      <p class="lead text-secondary mb-0">{{ problem.title }}</p>
+    </div>
+    <div class="text-md-end">
+      <span class="badge text-bg-warning">{{ attempt.status.value.title() }}</span>
+      <div class="small text-secondary mt-2">Attempt #{{ attempt.id }}</div>
+    </div>
+  </div>
+
+  <p class="text-secondary mb-4">Describe your design decisions. There can be more than one valid solution; explain responsibilities, relationships, and trade-offs clearly.</p>
+
+  {% set is_draft = attempt.status.value == "DRAFT" %}
+  {% if not is_draft %}
+    <div class="alert {% if attempt.status.value == 'EVALUATION_FAILED' %}alert-danger{% else %}alert-success{% endif %}" role="status">
+      {% if attempt.status.value == "FEEDBACK_READY" %}
+        Feedback Ready. Your submitted design has been evaluated.
+      {% elif attempt.status.value == "EVALUATION_FAILED" %}
+        Evaluation Failed. Retry will be available from the feedback page.
+      {% else %}
+        This attempt is no longer editable.
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <form method="post" action="{{ url_for('attempts.save', attempt_id=attempt.id) }}" novalidate>
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4 p-md-5">
+        {% set field_error = errors.get('classes_text') %}
+        <label class="form-label fw-semibold" for="classes_text">Classes and responsibilities</label>
+        <div class="form-text mb-2">List important classes/interfaces, their responsibilities, and key methods or fields.</div>
+        <textarea class="form-control{% if field_error %} is-invalid{% endif %}" id="classes_text" name="classes_text" rows="7" placeholder="Patient: stores patient identity and contact details.&#10;QueueToken: owns token number, priority, status, and timestamps.&#10;Doctor: tracks availability and active consultation.&#10;QueueService: creates and updates queue tokens."{% if not is_draft %} readonly{% endif %}>{{ submission.classes_text }}</textarea>
+        {% if field_error %}<div class="invalid-feedback">{{ field_error }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4 p-md-5">
+        {% set field_error = errors.get('relationships_text') %}
+        <label class="form-label fw-semibold" for="relationships_text">Relationships and main workflow</label>
+        <div class="form-text mb-2">Describe which objects communicate, own data, or depend on each other. Explain the main flow.</div>
+        <textarea class="form-control{% if field_error %} is-invalid{% endif %}" id="relationships_text" name="relationships_text" rows="6" placeholder="QueueService creates a QueueToken for a Patient.&#10;QueueService uses QueueStrategy to select the next token.&#10;DoctorAssignmentService assigns a selected token to an available Doctor."{% if not is_draft %} readonly{% endif %}>{{ submission.relationships_text }}</textarea>
+        {% if field_error %}<div class="invalid-feedback">{{ field_error }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4 p-md-5">
+        {% set field_error = errors.get('extensibility_text') %}
+        <label class="form-label fw-semibold" for="extensibility_text">Interfaces and extensibility choices</label>
+        <div class="form-text mb-2">Explain interfaces, strategies, or abstractions that make future changes easier.</div>
+        <textarea class="form-control{% if field_error %} is-invalid{% endif %}" id="extensibility_text" name="extensibility_text" rows="5" placeholder="QueueStrategy supports FIFO and priority-based selection.&#10;NotificationChannel supports SMS, email, and in-app notifications."{% if not is_draft %} readonly{% endif %}>{{ submission.extensibility_text }}</textarea>
+        {% if field_error %}<div class="invalid-feedback">{{ field_error }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4 p-md-5">
+        {% set field_error = errors.get('tradeoffs_text') %}
+        <label class="form-label fw-semibold" for="tradeoffs_text">Assumptions and trade-offs</label>
+        <div class="form-text mb-2">State business assumptions, edge cases, and why you made important design choices.</div>
+        <textarea class="form-control{% if field_error %} is-invalid{% endif %}" id="tradeoffs_text" name="tradeoffs_text" rows="5" placeholder="Priority patients are served before normal patients.&#10;FIFO applies within the same priority level.&#10;Cancellation marks a token inactive instead of deleting it."{% if not is_draft %} readonly{% endif %}>{{ submission.tradeoffs_text }}</textarea>
+        {% if field_error %}<div class="invalid-feedback">{{ field_error }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+      <div class="card-body p-4 p-md-5">
+        {% set field_error = errors.get('diagram_text') %}
+        <label class="form-label fw-semibold" for="diagram_text">Optional Mermaid class diagram</label>
+        <div class="form-text mb-2">You may add Mermaid class diagram syntax. This is optional.</div>
+        <textarea class="form-control font-monospace{% if field_error %} is-invalid{% endif %}" id="diagram_text" name="diagram_text" rows="8" placeholder="classDiagram&#10;    Patient &quot;1&quot; --> &quot;0..1&quot; QueueToken&#10;    QueueService --> QueueStrategy&#10;    QueueService --> NotificationChannel"{% if not is_draft %} readonly{% endif %}>{{ submission.diagram_text }}</textarea>
+        {% if field_error %}<div class="invalid-feedback">{{ field_error }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 justify-content-between align-items-center">
+      <div class="d-flex flex-wrap gap-2">
+        {% if is_draft %}
+          <button class="btn btn-primary" type="submit">Save Draft</button>
+        {% endif %}
+        <a class="btn btn-outline-secondary" href="{{ url_for('problems.detail', slug=problem.slug) }}">Back to Problem</a>
+      </div>
+      <div class="d-flex flex-wrap gap-2 align-items-center">
+        {% if is_draft %}
+          <button class="btn btn-success" type="submit" formaction="{{ url_for('attempts.submit', attempt_id=attempt.id) }}">Submit for Feedback</button>
+        {% elif attempt.status.value == "FEEDBACK_READY" %}
+          <a class="btn btn-success" href="{{ url_for('attempts.feedback', attempt_id=attempt.id) }}">View Feedback</a>
+          <button class="btn btn-outline-secondary" type="button" disabled>Create Improved Attempt</button>
+        {% endif %}
+        <a class="btn btn-link" href="{{ url_for('history.index') }}">My History</a>
+      </div>
+    </div>
+  </form>
+{% endblock %}
