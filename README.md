@@ -6,26 +6,26 @@ Queue-Cure LLD Studio is a focused Low-Level Design practice and evaluation plat
 
 ```text
 Choose LLD Problem
-	|
-	v
+      |
+      v
 Start Attempt
-	|
-	v
+      |
+      v
 Create/Save Design
-	|
-	v
+      |
+      v
 Submit
-	|
-	v
+      |
+      v
 Deterministic Evaluation
-	|
-	v
+      |
+      v
 Feedback
-	|
-	v
+      |
+      v
 History
-	|
-	v
+      |
+      v
 Retry / Practice Again
 ```
 
@@ -82,8 +82,8 @@ Evaluation uses a separate abstraction:
 
 ```text
 Evaluator Protocol
-	 |
-	 v
+       |
+       v
 RuleBasedEvaluator
 ```
 
